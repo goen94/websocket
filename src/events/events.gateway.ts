@@ -30,8 +30,8 @@ export class EventsGateway implements OnGatewayInit {
 
   @SubscribeMessage('updateLocation')
   subsLocationUpdate(
-    @MessageBody() data: { userId: number; lat: number; lang: number },
+    @MessageBody() data: any,
   ) {
-    this.server.emit('location', data);
+    this.server.emit('location', JSON.parse(data));
   }
 }
