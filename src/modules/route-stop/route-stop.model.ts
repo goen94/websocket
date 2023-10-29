@@ -11,7 +11,7 @@ import {
 import { RouteModel } from '../route/route.model';
 import { StopModel } from '../stop/stop.model';
 
-@Table({ tableName: 'route_stops' })
+@Table({ tableName: 'route_stops', timestamps: false })
 export class RouteStopModel extends Model<RouteStopModel> {
   @AutoIncrement
   @PrimaryKey
@@ -20,20 +20,20 @@ export class RouteStopModel extends Model<RouteStopModel> {
 
   @ForeignKey(() => RouteModel)
   @Column({ type: DataType.BIGINT, field: 'route_id' })
-  routeId: number;
+  route_id: number;
 
   @ForeignKey(() => StopModel)
   @Column({ type: DataType.BIGINT, field: 'stop_id' })
-  stopId: number;
+  stop_id: number;
 
   @Column({ type: DataType.INTEGER, field: 'id' })
   order: number;
 
   @Column({ type: DataType.DATE, field: 'created_at' })
-  createdAt: Date;
+  created_at: Date;
 
   @Column({ type: DataType.DATE, field: 'updated_at' })
-  updatedAt: Date;
+  updated_at: Date;
 
   @BelongsTo(() => RouteModel)
   route: RouteModel;

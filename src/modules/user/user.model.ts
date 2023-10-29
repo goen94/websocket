@@ -7,7 +7,7 @@ import {
   Table,
 } from 'sequelize-typescript';
 
-@Table({ tableName: 'users' })
+@Table({ tableName: 'users', timestamps: false })
 export class UserModel extends Model {
   @AutoIncrement
   @PrimaryKey
@@ -21,10 +21,10 @@ export class UserModel extends Model {
   email: string;
 
   @Column({ type: DataType.DATE, field: 'email_verified_at' })
-  emailVerifiedAt: Date;
+  email_verifiedAt: Date;
 
   @Column({ type: DataType.STRING, field: 'phone_number' })
-  phoneNumber: string;
+  phone_number: string;
 
   @Column({ type: DataType.STRING })
   password: string;
@@ -33,11 +33,11 @@ export class UserModel extends Model {
   type: string;
 
   @Column({ type: DataType.STRING, field: 'remember_token' })
-  rememberToken: string;
+  remember_token: string;
 
   @Column({ type: DataType.DATE, field: 'created_at' })
-  createdAt: Date;
+  created_at: Date;
 
   @Column({ type: DataType.DATE, field: 'updated_at' })
-  updatedAt: Date;
+  updated_at: Date;
 }

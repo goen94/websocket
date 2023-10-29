@@ -11,7 +11,7 @@ import {
 import { TripModel } from '../trip/trip.model';
 import { StudentModel } from '../student/student.model';
 
-@Table({ tableName: 'trip_students' })
+@Table({ tableName: 'trip_students', timestamps: false })
 export class TripStudentModel extends Model<TripStudentModel> {
   @AutoIncrement
   @PrimaryKey
@@ -20,20 +20,20 @@ export class TripStudentModel extends Model<TripStudentModel> {
 
   @ForeignKey(() => TripModel)
   @Column({ type: DataType.BIGINT, field: 'trip_id' })
-  tripId: number;
+  trip_id: number;
 
   @ForeignKey(() => StudentModel)
   @Column({ type: DataType.BIGINT, field: 'student_id' })
-  studentId: number;
+  student_id: number;
 
   @Column({ type: DataType.BOOLEAN })
   status: boolean;
 
   @Column({ type: DataType.DATE, field: 'created_at' })
-  createdAt: Date;
+  created_at: Date;
 
   @Column({ type: DataType.DATE, field: 'updated_at' })
-  updatedAt: Date;
+  updated_at: Date;
 
   @BelongsTo(() => TripModel)
   trip: TripModel;

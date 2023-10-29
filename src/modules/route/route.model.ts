@@ -13,7 +13,7 @@ import { StopModel } from '../stop/stop.model';
 import { BusModel } from '../bus/bus.model';
 import { TripModel } from '../trip/trip.model';
 
-@Table({ tableName: 'routes' })
+@Table({ tableName: 'routes', timestamps: false })
 export class RouteModel extends Model<RouteModel> {
   @AutoIncrement
   @PrimaryKey
@@ -30,10 +30,10 @@ export class RouteModel extends Model<RouteModel> {
   description: string;
 
   @Column({ type: DataType.DATE, field: 'created_at' })
-  createdAt: Date;
+  created_at: Date;
 
   @Column({ type: DataType.DATE, field: 'updated_at' })
-  updatedAt: Date;
+  updated_at: Date;
 
   @BelongsToMany(() => StopModel, () => RouteStopModel)
   stops: StopModel[];

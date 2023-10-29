@@ -11,6 +11,7 @@ import { Logger } from '@nestjs/common';
 import { AppService } from '../app.service';
 import { TripService } from '../modules/trip/trip.service';
 import { BusService } from '../modules/bus/bus.service';
+import { DirectionService } from '../modules/direction/direction.service';
 
 @WebSocketGateway({
   cors: {
@@ -25,6 +26,7 @@ export class EventsGateway implements OnGatewayInit {
     private appService: AppService,
     private busService: BusService,
     private tripService: TripService,
+    private directionService: DirectionService,
   ) {}
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -34,8 +36,8 @@ export class EventsGateway implements OnGatewayInit {
     this.logger.log('Websocket started');
   }
 
-  @SubscribeMessage('updateLocation')
-  async subsLocationUpdate(@MessageBody() data: any) {
+  @SubscribeMessage('updateTripStatus')
+  async updateTripStatus(@MessageBody() data: any) {
     if (typeof data === 'string') {
       data = JSON.parse(data);
     }
@@ -43,6 +45,21 @@ export class EventsGateway implements OnGatewayInit {
       data.busId,
       data.latitude,
       data.longitude,
+      data.bearing,
+    );
+  }
+
+  @SubscribeMessage('updateLocation')
+  async subsLocationUpdate(@MessageBody() data: any) {
+    console.log(data, new Date());
+    if (typeof data === 'string') {
+      data = JSON.parse(data);
+    }
+    await this.busService.updateLocation(
+      data.busId,
+      data.latitude,
+      data.longitude,
+      data.bearing,
     );
   }
 
@@ -57,7 +74,34 @@ export class EventsGateway implements OnGatewayInit {
     if (typeof data === 'string') {
       data = JSON.parse(data);
     }
-    const trip = await this.tripService.getActiveTrip(data.studentId);
-    this.server.emit('trip_' + data.studentId, trip);
+    await this.tripService.getActiveTrip(data.studentId);
+  }
+
+  @SubscribeMessage('tripBus')
+  async subsActiveTripBus(@MessageBody() data: any) {
+    if (typeof data === 'string') {
+      data = JSON.parse(data);
+    }
+    const trip = await this.tripService.getBusActiveTrip(data.busId);
+    if (trip) {
+      const nextRoute = await this.directionService.getDirection(
+        trip.current_latitude,
+        trip.current_longitude,
+        trip.next_stop.latitude,
+        trip.next_stop.longitude,
+      );
+      const route = await this.directionService.getDirection(
+        trip.current_latitude,
+        trip.current_longitude,
+        trip.end_stop.latitude,
+        trip.end_stop.longitude,
+      );
+      this.appService.socket.emit('trip_bus_' + trip.bus_id, {
+        trip,
+        bearing: 0,
+        route,
+        nextRoute,
+      });
+    }
   }
 }

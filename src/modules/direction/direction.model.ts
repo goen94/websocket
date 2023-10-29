@@ -7,7 +7,7 @@ import {
   Table,
 } from 'sequelize-typescript';
 
-@Table({ tableName: 'directions' })
+@Table({ tableName: 'directions', timestamps: false })
 export class DirectionModel extends Model<DirectionModel> {
   @AutoIncrement
   @PrimaryKey
@@ -15,23 +15,23 @@ export class DirectionModel extends Model<DirectionModel> {
   id: number;
 
   @Column({ type: DataType.DOUBLE(10, 6), field: 'origin_latitude' })
-  originLatitude: number;
+  origin_latitude: number;
 
   @Column({ type: DataType.DOUBLE(10, 6), field: 'origin_longitude' })
-  originLongitude: number;
+  origin_longitude: number;
 
   @Column({ type: DataType.DOUBLE(10, 6), field: 'destination_latitude' })
-  destinationLatitude: number;
+  destination_latitude: number;
 
   @Column({ type: DataType.DOUBLE(10, 6), field: 'destination_longitude' })
-  destinationLongitude: number;
+  destination_longitude: number;
 
   @Column({ type: DataType.TEXT('long') })
   response: string;
 
   @Column({ type: DataType.DATE, field: 'created_at' })
-  createdAt: Date;
+  created_at: Date;
 
   @Column({ type: DataType.DATE, field: 'updated_at' })
-  updatedAt: Date;
+  updated_at: Date;
 }

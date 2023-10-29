@@ -13,7 +13,7 @@ import { OperatorModel } from '../operator/operator.model';
 import { RouteModel } from '../route/route.model';
 import { TripModel } from '../trip/trip.model';
 
-@Table({ tableName: 'buses' })
+@Table({ tableName: 'buses', timestamps: false })
 export class BusModel extends Model<BusModel> {
   @AutoIncrement
   @PrimaryKey
@@ -28,18 +28,18 @@ export class BusModel extends Model<BusModel> {
 
   @ForeignKey(() => OperatorModel)
   @Column({ type: DataType.BIGINT, field: 'driver_id' })
-  driverId: number;
+  driver_id: number;
 
   @ForeignKey(() => OperatorModel)
   @Column({ type: DataType.BIGINT, field: 'officer_id' })
-  officerId: number;
+  officer_id: number;
 
   @ForeignKey(() => RouteModel)
   @Column({ type: DataType.BIGINT, field: 'route_id' })
-  routeId: number;
+  route_id: number;
 
   @Column({ type: DataType.STRING, field: 'license_plate' })
-  licensePlate: string;
+  license_plate: string;
 
   @Column({ type: DataType.DOUBLE(10, 6), field: 'latitude' })
   latitude: number;
@@ -48,10 +48,10 @@ export class BusModel extends Model<BusModel> {
   longitude: number;
 
   @Column({ type: DataType.DATE, field: 'created_at' })
-  createdAt: Date;
+  created_at: Date;
 
   @Column({ type: DataType.DATE, field: 'updated_at' })
-  updatedAt: Date;
+  updated_at: Date;
 
   @BelongsTo(() => OperatorModel, 'driver_id')
   driver: OperatorModel;

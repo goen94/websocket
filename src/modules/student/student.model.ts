@@ -11,7 +11,7 @@ import {
 import { BusModel } from '../bus/bus.model';
 import { StopModel } from '../stop/stop.model';
 
-@Table({ tableName: 'students' })
+@Table({ tableName: 'students', timestamps: false })
 export class StudentModel extends Model<StudentModel> {
   @AutoIncrement
   @PrimaryKey
@@ -28,14 +28,14 @@ export class StudentModel extends Model<StudentModel> {
   address: string;
 
   @Column({ type: DataType.BIGINT, field: 'school_id' })
-  schoolId: number;
+  school_id: number;
 
   @Column({ type: DataType.STRING })
   class: string;
 
   @ForeignKey(() => BusModel)
   @Column({ type: DataType.BIGINT, field: 'bus_id' })
-  busId: number;
+  bus_id: number;
 
   @Column({ type: DataType.STRING })
   status: string;
@@ -44,17 +44,17 @@ export class StudentModel extends Model<StudentModel> {
   rfid: string;
 
   @Column({ type: DataType.BIGINT, field: 'user_id' })
-  userId: number;
+  user_id: number;
 
   @ForeignKey(() => StopModel)
   @Column({ type: DataType.BIGINT, field: 'stop_id' })
-  stopId: number;
+  stop_id: number;
 
   @Column({ type: DataType.DATE, field: 'created_at' })
-  createdAt: Date;
+  created_at: Date;
 
   @Column({ type: DataType.DATE, field: 'updated_at' })
-  updatedAt: Date;
+  updated_at: Date;
 
   @BelongsTo(() => BusModel)
   bus: BusModel;

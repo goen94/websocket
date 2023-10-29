@@ -18,10 +18,10 @@ export class DirectionService {
   ) {
     const direction = await this.directionModel.findOne({
       where: {
-        originLatitude: originLat,
-        originLongitude: originLong,
-        destinationLatitude: desLat,
-        destinationLongitude: desLong,
+        origin_latitude: originLat,
+        origin_longitude: originLong,
+        destination_latitude: desLat,
+        destination_longitude: desLong,
       },
     });
 
@@ -34,10 +34,10 @@ export class DirectionService {
         );
         if (res.data) {
           await this.directionModel.create({
-            originLatitude: originLat,
-            originLongitude: originLong,
-            destinationLatitude: desLat,
-            destinationLongitude: desLong,
+            origin_latitude: originLat,
+            origin_longitude: originLong,
+            destination_latitude: desLat,
+            destination_longitude: desLong,
             response: JSON.stringify(res.data),
           });
           return res.data;

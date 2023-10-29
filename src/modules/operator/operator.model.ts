@@ -12,7 +12,7 @@ import {
 import { UserModel } from '../user/user.model';
 import { BusModel } from '../bus/bus.model';
 
-@Table({ tableName: 'operators' })
+@Table({ tableName: 'operators', timestamps: false })
 export class OperatorModel extends Model<OperatorModel> {
   @AutoIncrement
   @PrimaryKey
@@ -29,7 +29,7 @@ export class OperatorModel extends Model<OperatorModel> {
   address: string;
 
   @Column({ type: DataType.STRING, field: 'phone_number' })
-  phoneNumber: string;
+  phone_number: string;
 
   @Column({ type: DataType.STRING })
   type: string;
@@ -38,21 +38,21 @@ export class OperatorModel extends Model<OperatorModel> {
   status: string;
 
   @Column({ type: DataType.DATE, field: 'created_at' })
-  createdAt: Date;
+  created_at: Date;
 
   @Column({ type: DataType.DATE, field: 'updated_at' })
-  updatedAt: Date;
+  updated_at: Date;
 
   @ForeignKey(() => UserModel)
   @Column({ type: DataType.BIGINT, field: 'user_id' })
-  userId: number;
+  user_id: number;
 
   @BelongsTo(() => UserModel)
   user: UserModel;
 
   @HasMany(() => BusModel, 'driver_id')
-  busesDriver: BusModel[];
+  buses_driver: BusModel[];
 
   @HasMany(() => BusModel, 'officer_id')
-  busesOperator: BusModel[];
+  buses_operator: BusModel[];
 }
