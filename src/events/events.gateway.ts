@@ -82,7 +82,10 @@ export class EventsGateway implements OnGatewayInit {
     if (typeof data === 'string') {
       data = JSON.parse(data);
     }
-    const trip = await this.tripService.getBusActiveTrip(data.busId);
+    const { trip, busRoute } = await this.tripService.getBusActiveTrip(
+      data.busId,
+    );
+    console.log(busRoute.stops.length);
     if (trip) {
       const nextRoute = await this.directionService.getDirection(
         trip.current_latitude,
@@ -99,6 +102,7 @@ export class EventsGateway implements OnGatewayInit {
       this.appService.socket.emit('trip_bus_' + trip.bus_id, {
         trip,
         bearing: 0,
+        bus_route: busRoute,
         route,
         nextRoute,
       });

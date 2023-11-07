@@ -5,6 +5,7 @@ import { TripService } from '../trip/trip.service';
 import { DirectionService } from '../direction/direction.service';
 import { AppService } from '../../app.service';
 import { TripModel } from '../trip/trip.model';
+import { RouteModel } from '../route/route.model';
 
 @Injectable()
 export class BusService {
@@ -34,9 +35,11 @@ export class BusService {
       const buses = await this.findAllBus();
       this.appService.socket.emit('bus', buses);
 
-      const trip = await this.tripService.getBusActiveTrip(bus.id);
+      const { trip, busRoute } = await this.tripService.getBusActiveTrip(
+        bus.id,
+      );
       if (trip) {
-        this.emitForBus(trip, bearing);
+        this.emitForBus(trip, bearing, busRoute);
         const nextRoute = await this.directionService.getDirection(
           trip.current_latitude,
           trip.current_longitude,
@@ -58,6 +61,7 @@ export class BusService {
             this.appService.socket.emit('trip_' + student.id, {
               trip,
               bearing,
+              bus_route: busRoute,
               route,
               nextRoute,
             });
@@ -67,7 +71,7 @@ export class BusService {
     }
   }
 
-  async emitForBus(trip: TripModel, bearing: number) {
+  async emitForBus(trip: TripModel, bearing: number, busRoute: RouteModel) {
     if (trip) {
       const nextRoute = await this.directionService.getDirection(
         trip.current_latitude,
@@ -84,6 +88,7 @@ export class BusService {
       this.appService.socket.emit('trip_bus_' + trip.bus_id, {
         trip,
         bearing,
+        bus_route: busRoute,
         route,
         nextRoute,
       });
