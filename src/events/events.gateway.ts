@@ -108,4 +108,37 @@ export class EventsGateway implements OnGatewayInit {
       });
     }
   }
+
+  @SubscribeMessage('tripDriver')
+  async subsActiveTripDriver(@MessageBody() data: any) {
+    console.log('masuk');
+    if (typeof data === 'string') {
+      data = JSON.parse(data);
+    }
+    const { trip, busRoute } = await this.tripService.getDriverActiveTrip(
+      data.driverId,
+    );
+
+    if (trip) {
+      const nextRoute = await this.directionService.getDirection(
+        trip.current_latitude,
+        trip.current_longitude,
+        trip.next_stop.latitude,
+        trip.next_stop.longitude,
+      );
+      const route = await this.directionService.getDirection(
+        trip.current_latitude,
+        trip.current_longitude,
+        trip.end_stop.latitude,
+        trip.end_stop.longitude,
+      );
+      this.appService.socket.emit('trip_driver_' + trip.driver_id, {
+        trip,
+        bearing: 0,
+        bus_route: busRoute,
+        route,
+        nextRoute,
+      });
+    }
+  }
 }

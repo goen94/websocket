@@ -131,4 +131,46 @@ export class TripService {
 
     return { trip, busRoute };
   }
+
+  async getDriverActiveTrip(driverId: number) {
+    const trip = await this.tripModel.findOne({
+      where: { driver_id: driverId, status: { [Op.ne]: 'success' } },
+      include: [
+        {
+          model: StudentModel,
+          include: [
+            {
+              model: StopModel,
+            },
+          ],
+        },
+        {
+          model: BusModel,
+        },
+        {
+          model: StopModel,
+          as: 'start_stop',
+          required: false,
+        },
+        {
+          model: StopModel,
+          as: 'next_stop',
+          required: false,
+        },
+        {
+          model: StopModel,
+          as: 'end_stop',
+          required: false,
+        },
+      ],
+    });
+
+    const busRoute = await this.routeModel.findOne({
+      where: { id: trip.route_id },
+      include: [{ model: StopModel }],
+      order: [[Sequelize.literal('`stops.RouteStopModel.order`'), 'ASC']],
+    });
+
+    return { trip, busRoute };
+  }
 }
