@@ -85,7 +85,6 @@ export class EventsGateway implements OnGatewayInit {
     const { trip, busRoute } = await this.tripService.getBusActiveTrip(
       data.busId,
     );
-    console.log(busRoute.stops.length);
     if (trip) {
       const nextRoute = await this.directionService.getDirection(
         trip.current_latitude,
@@ -140,5 +139,13 @@ export class EventsGateway implements OnGatewayInit {
         nextRoute,
       });
     }
+  }
+
+  @SubscribeMessage('updateTrip')
+  async updateTrip(@MessageBody() data: any) {
+    if (typeof data === 'string') {
+      data = JSON.parse(data);
+    }
+    await this.tripService.updateTrip(data.tripId);
   }
 }

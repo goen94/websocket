@@ -173,4 +173,51 @@ export class TripService {
 
     return { trip, busRoute };
   }
+
+  async updateTrip(tripId: number) {
+    const trip = await this.tripModel.findOne({
+      where: { id: tripId },
+    });
+
+    const busRoute = await this.routeModel.findOne({
+      where: { id: trip.route_id },
+      include: [{ model: StopModel }],
+      order: [[Sequelize.literal('`stops.RouteStopModel.order`'), 'ASC']],
+    });
+
+    for (let i = 0; i < busRoute.stops.length; i++) {
+      const stop = busRoute.stops[i];
+      if (stop.id === trip.next_stop_id) {
+        trip.next_stop_id = busRoute.stops[i + 1].id;
+        break;
+      }
+    }
+
+    await trip.save();
+    this.emitForDriver(trip, 0, busRoute);
+  }
+
+  async emitForDriver(trip: TripModel, bearing: number, busRoute: RouteModel) {
+    if (trip) {
+      const nextRoute = await this.directionService.getDirection(
+        trip.current_latitude,
+        trip.current_longitude,
+        trip.next_stop.latitude,
+        trip.next_stop.longitude,
+      );
+      const route = await this.directionService.getDirection(
+        trip.current_latitude,
+        trip.current_longitude,
+        trip.end_stop.latitude,
+        trip.end_stop.longitude,
+      );
+      this.appService.socket.emit('trip_driver_' + trip.driver_id, {
+        trip,
+        bearing,
+        bus_route: busRoute,
+        route,
+        nextRoute,
+      });
+    }
+  }
 }
