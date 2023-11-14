@@ -194,6 +194,36 @@ export class TripService {
     }
 
     await trip.save();
+    await trip.reload({
+      include: [
+        {
+          model: StudentModel,
+          include: [
+            {
+              model: StopModel,
+            },
+          ],
+        },
+        {
+          model: BusModel,
+        },
+        {
+          model: StopModel,
+          as: 'start_stop',
+          required: false,
+        },
+        {
+          model: StopModel,
+          as: 'next_stop',
+          required: false,
+        },
+        {
+          model: StopModel,
+          as: 'end_stop',
+          required: false,
+        },
+      ],
+    });
     this.emitForDriver(trip, 0, busRoute);
   }
 
