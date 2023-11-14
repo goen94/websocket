@@ -40,6 +40,7 @@ export class BusService {
       );
       if (trip) {
         this.emitForBus(trip, bearing, busRoute);
+        this.emitForDriver(trip, bearing, busRoute);
         const nextRoute = await this.directionService.getDirection(
           trip.current_latitude,
           trip.current_longitude,
@@ -86,6 +87,30 @@ export class BusService {
         trip.end_stop.longitude,
       );
       this.appService.socket.emit('trip_bus_' + trip.bus_id, {
+        trip,
+        bearing,
+        bus_route: busRoute,
+        route,
+        nextRoute,
+      });
+    }
+  }
+
+  async emitForDriver(trip: TripModel, bearing: number, busRoute: RouteModel) {
+    if (trip) {
+      const nextRoute = await this.directionService.getDirection(
+        trip.current_latitude,
+        trip.current_longitude,
+        trip.next_stop.latitude,
+        trip.next_stop.longitude,
+      );
+      const route = await this.directionService.getDirection(
+        trip.current_latitude,
+        trip.current_longitude,
+        trip.end_stop.latitude,
+        trip.end_stop.longitude,
+      );
+      this.appService.socket.emit('trip_driver_' + trip.driver_id, {
         trip,
         bearing,
         bus_route: busRoute,
