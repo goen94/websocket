@@ -39,11 +39,12 @@ export class BusService {
         bus.id,
       );
       if (trip) {
-        this.emitForBus(trip, bearing, busRoute);
-        this.emitForDriver(trip, bearing, busRoute);
-
         trip.current_latitude = bus.latitude;
         trip.current_longitude = bus.longitude;
+        await trip.save();
+
+        this.emitForBus(trip, bearing, busRoute);
+        this.emitForDriver(trip, bearing, busRoute);
 
         const nextRoute = await this.directionService.getDirection(
           trip.current_latitude,
@@ -52,7 +53,6 @@ export class BusService {
           trip.next_stop.longitude,
         );
 
-        await trip.save();
         for (const student of trip.students) {
           if (!student['TripStudentModel']['status']) {
             const route = await this.directionService.getDirection(
