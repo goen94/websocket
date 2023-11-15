@@ -10,6 +10,7 @@ import {
 } from 'sequelize-typescript';
 import { TripModel } from '../trip/trip.model';
 import { StudentModel } from '../student/student.model';
+import { StopModel } from '../stop/stop.model';
 
 @Table({ tableName: 'trip_students', timestamps: false })
 export class TripStudentModel extends Model<TripStudentModel> {
@@ -26,6 +27,10 @@ export class TripStudentModel extends Model<TripStudentModel> {
   @Column({ type: DataType.BIGINT, field: 'student_id' })
   student_id: number;
 
+  @ForeignKey(() => StopModel)
+  @Column({ type: DataType.BIGINT, field: 'stop_id' })
+  stop_id: number;
+
   @Column({ type: DataType.BOOLEAN })
   status: boolean;
 
@@ -40,4 +45,7 @@ export class TripStudentModel extends Model<TripStudentModel> {
 
   @BelongsTo(() => StudentModel)
   student: StudentModel;
+
+  @BelongsTo(() => StopModel)
+  stop: StopModel;
 }

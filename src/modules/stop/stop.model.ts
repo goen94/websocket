@@ -11,6 +11,7 @@ import {
 import { RouteModel } from '../route/route.model';
 import { RouteStopModel } from '../route-stop/route-stop.model';
 import { TripModel } from '../trip/trip.model';
+import { TripStudentModel } from '../trip-student/trip-student.model';
 
 @Table({ tableName: 'stops', timestamps: false })
 export class StopModel extends Model<StopModel> {
@@ -42,4 +43,7 @@ export class StopModel extends Model<StopModel> {
 
   @HasMany(() => TripModel, 'start_stop_id')
   trips_start: TripModel[];
+
+  @HasMany(() => TripStudentModel)
+  tripStudents: TripStudentModel[];
 }

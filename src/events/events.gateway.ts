@@ -51,7 +51,6 @@ export class EventsGateway implements OnGatewayInit {
 
   @SubscribeMessage('updateLocation')
   async subsLocationUpdate(@MessageBody() data: any) {
-    console.log(data, new Date());
     if (typeof data === 'string') {
       data = JSON.parse(data);
     }
@@ -110,7 +109,6 @@ export class EventsGateway implements OnGatewayInit {
 
   @SubscribeMessage('tripDriver')
   async subsActiveTripDriver(@MessageBody() data: any) {
-    console.log('masuk');
     if (typeof data === 'string') {
       data = JSON.parse(data);
     }

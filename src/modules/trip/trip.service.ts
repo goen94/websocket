@@ -8,6 +8,7 @@ import { StopModel } from '../stop/stop.model';
 import { DirectionService } from '../direction/direction.service';
 import { AppService } from '../../app.service';
 import { RouteModel } from '../route/route.model';
+import { TripStudentModel } from '../trip-student/trip-student.model';
 
 @Injectable()
 export class TripService {
@@ -56,7 +57,18 @@ export class TripService {
     if (trip) {
       const busRoute = await this.routeModel.findOne({
         where: { id: trip.route_id },
-        include: [{ model: StopModel }],
+        include: [
+          {
+            model: StopModel,
+            include: [
+              {
+                model: TripStudentModel,
+                where: { trip_id: trip.id },
+                include: [{ model: StudentModel }],
+              },
+            ],
+          },
+        ],
         order: [[Sequelize.literal('`stops.RouteStopModel.order`'), 'ASC']],
       });
 
@@ -125,7 +137,18 @@ export class TripService {
 
     const busRoute = await this.routeModel.findOne({
       where: { id: trip.route_id },
-      include: [{ model: StopModel }],
+      include: [
+        {
+          model: StopModel,
+          include: [
+            {
+              model: TripStudentModel,
+              where: { trip_id: trip.id },
+              include: [{ model: StudentModel }],
+            },
+          ],
+        },
+      ],
       order: [[Sequelize.literal('`stops.RouteStopModel.order`'), 'ASC']],
     });
 
@@ -167,7 +190,18 @@ export class TripService {
 
     const busRoute = await this.routeModel.findOne({
       where: { id: trip.route_id },
-      include: [{ model: StopModel }],
+      include: [
+        {
+          model: StopModel,
+          include: [
+            {
+              model: TripStudentModel,
+              where: { trip_id: trip.id },
+              include: [{ model: StudentModel }],
+            },
+          ],
+        },
+      ],
       order: [[Sequelize.literal('`stops.RouteStopModel.order`'), 'ASC']],
     });
 
@@ -181,7 +215,18 @@ export class TripService {
 
     const busRoute = await this.routeModel.findOne({
       where: { id: trip.route_id },
-      include: [{ model: StopModel }],
+      include: [
+        {
+          model: StopModel,
+          include: [
+            {
+              model: TripStudentModel,
+              where: { trip_id: trip.id },
+              include: [{ model: StudentModel }],
+            },
+          ],
+        },
+      ],
       order: [[Sequelize.literal('`stops.RouteStopModel.order`'), 'ASC']],
     });
 
