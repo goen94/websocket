@@ -64,7 +64,8 @@ export class TripService {
               {
                 model: TripStudentModel,
                 where: { trip_id: trip.id },
-                include: [{ model: StudentModel }],
+                include: [{ model: StudentModel, required: false }],
+                required: false,
               },
             ],
           },
@@ -144,7 +145,8 @@ export class TripService {
             {
               model: TripStudentModel,
               where: { trip_id: trip.id },
-              include: [{ model: StudentModel }],
+              include: [{ model: StudentModel, required: false }],
+              required: false,
             },
           ],
         },
@@ -197,7 +199,8 @@ export class TripService {
             {
               model: TripStudentModel,
               where: { trip_id: trip.id },
-              include: [{ model: StudentModel }],
+              include: [{ model: StudentModel, required: false }],
+              required: false,
             },
           ],
         },
@@ -222,7 +225,8 @@ export class TripService {
             {
               model: TripStudentModel,
               where: { trip_id: trip.id },
-              include: [{ model: StudentModel }],
+              include: [{ model: StudentModel, required: false }],
+              required: false,
             },
           ],
         },
