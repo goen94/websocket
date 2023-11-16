@@ -14,6 +14,8 @@ import { TripStudentModel } from '../trip-student/trip-student.model';
 export class TripService {
   constructor(
     @InjectModel(TripModel) private readonly tripModel: typeof TripModel,
+    @InjectModel(TripStudentModel)
+    private readonly tripStudentModel: typeof TripStudentModel,
     @InjectModel(RouteModel)
     private readonly routeModel: typeof RouteModel,
     private directionService: DirectionService,
@@ -211,7 +213,7 @@ export class TripService {
     return { trip, busRoute };
   }
 
-  async updateTrip(tripId: number) {
+  async updateTrip(tripId: number, studentIds: number[]) {
     const trip = await this.tripModel.findOne({
       where: { id: tripId },
     });
@@ -234,11 +236,23 @@ export class TripService {
       order: [[Sequelize.literal('`stops.RouteStopModel.order`'), 'ASC']],
     });
 
+    const nextStopId = trip.next_stop_id;
     for (let i = 0; i < busRoute.stops.length; i++) {
       const stop = busRoute.stops[i];
       if (stop.id === trip.next_stop_id) {
         trip.next_stop_id = busRoute.stops[i + 1].id;
         break;
+      }
+    }
+
+    if (studentIds.length > 0) {
+      for (let i = 0; i < studentIds.length; i++) {
+        const tripStudent = await this.tripStudentModel.findOne({
+          where: { trip_id: trip.id, student_id: studentIds[i] },
+        });
+        tripStudent.status = true;
+        tripStudent.stop_id = nextStopId;
+        await tripStudent.save();
       }
     }
 
@@ -273,6 +287,7 @@ export class TripService {
         },
       ],
     });
+
     this.emitForDriver(trip, 0, busRoute);
   }
 

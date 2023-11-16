@@ -144,6 +144,6 @@ export class EventsGateway implements OnGatewayInit {
     if (typeof data === 'string') {
       data = JSON.parse(data);
     }
-    await this.tripService.updateTrip(data.tripId);
+    await this.tripService.updateTrip(data.tripId, data.students);
   }
 }
